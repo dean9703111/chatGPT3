@@ -2,14 +2,19 @@
 
 ### 1.5 ChatGPT 如何使用？
 
-ChatGPT 官方註冊平台:
+SETP 1：在 ChatGPT 官方平台註冊
 - **Web**：[官網](https://chat.openai.com)
 - **Android**：[Google Play](https://play.google.com/store/apps/details?id=com.openai.chatgpt&hl=en_US)
 - **iOS**：[Appstore](https://apps.apple.com/tw/app/chatgpt/id6448311069)
 
+SETP 4：嘗試輸入第一段對話
+```
+我過年都在趕稿心情很低落，需要鼓勵！
+```
+
 ### 1.6	可以將 ChatGPT 包裝成產品嗎？使用量很大能擴展嗎？
 
-[Make](https://www.make.com/en) 這款自動化工具，能讓你透過拖拉點選的方式來進行操作。
+補充資訊: [Make](https://www.make.com/en) 這款自動化工具，能讓你透過拖拉點選的方式來進行操作。
 
 ### 1.7	有推薦的 ChatGPT學習社團嗎？
 
