@@ -187,3 +187,7 @@ main();
 
 估算文字與 Token 的對應關係的網址：https://platform.openai.com/tokenizer
 
+### 參考資料：
+1.	[最終版 LINE Bot 串接OpenAI 程式](https://github.com/dean9703111/chatGPT3/tree/master/Ch11)
+2.	[與 ChatGPT 的完整對話](https://chatgpt.com/share/519904f5-f501-43a4-b942-26d8408d77f4)
+
