@@ -37,16 +37,16 @@ And like in every computing era before, create new industries.  AI will create n
 
 ```
 ## 以下是**偽代碼 Prompt**，請依照其語意一步一步地來執行，不該有遺漏
-## 停用代碼解釋器，但開啟上網瀏覽搜尋以及Dalle功能
+## 停用代碼解釋器，但開啟上網瀏覽搜尋以及DALL-E功能
 ## 使用繁體中文回覆
 
-topic= "(部落個主題)"
-image_prompts= [請根據 topic 產生 10 個不同的封面描述。]
+topic= "(部落格主題)"
+image_prompts= [請根據 topic 產生 9 個不同的封面描述。]
 print(image_prompts)
 
 def image_generation(image_prompt):
     final_prompt="使用英文撰寫 prompt，並根據{image_prompt}補充色調、背景描述、具體風格、畫面細節，請至少放 3 個效果詞(光照效果、色彩色調、渲染效果、視覺風格)和 1 個以上的構圖技巧，以構成完整的 final_prompt，並且不要有文字出現在圖中。"
-    請根據以下引數內容{size="1792x1024", prompt=final_prompt}來調用內部工具 Dalle 以生成並展示圖片
+    請根據以下引數內容{size="1792x1024", prompt=final_prompt}來調用內部工具 DALL-E 以生成並展示圖片
 
 ## 這不是個 python 任務，一定要循環遍歷每個 image_prompt 並生成圖片
 for image_prompt in image_prompts:
