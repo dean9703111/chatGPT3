@@ -43,7 +43,7 @@
 
 ### PART 6 對 ChatGPT 的疑問與質疑
 
-[Ch17. 目前 ChatGPT 有哪些問題與限制](Ch17)  
+[Ch17. 目前 ChatGPT 有哪些問題與限制，值得訂閱付費版嗎？](Ch17)  
 [Ch18. 會從萬事問 Google 變成萬事問 ChatGPT 嗎？](Ch18)  
 [Ch19. ChatGPT 會對專家造成威脅嗎？我的工作會受到影響嗎？](Ch19)  
 [Ch20. 生成式 AI 的資安筆記](Ch20)  
