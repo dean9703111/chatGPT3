@@ -27,8 +27,8 @@ https://suno.com/song/53452eb9-6fd6-40c1-bc87-a8280c1e35ac
 ### 25.5 從探索 GPT 找到 Suno 專家來生成歌曲
 
 ```
-創造一首屬於拳擊手的中文抒情歌曲，Style, Genre, and Type 請使用英文，樂器的使用也使用英文，僅歌詞顯示中文
+創造一首屬於拳擊手的中文抒情歌曲，Style, Genre, and Type 請使用英文，樂器的使用也使用英文，僅標題與歌詞顯示中文
 ```
 
 GPT 協助創作生成的音樂品質往往更好，且層次豐富，音樂試聽：
-https://suno.com/song/3d1d79b2-5a44-4fb9-9ebf-e78bc3bf060b
+https://suno.com/song/fae7bc1e-7f07-438a-9624-71439d39271c
