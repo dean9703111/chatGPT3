@@ -1,92 +1,113 @@
 import pymysql
-import logging
 import random
 import time
 from faker import Faker
+import logging
 
-# 設定 logging
+# 設定 log
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# 建立虛擬資料生成器
-fake = Faker()
+# 生成虛擬資料的 Faker
+faker = Faker()
 
 # 連接 MySQL 資料庫
-connection = pymysql.connect(
-    host='localhost',
-    user='root',
-    password='example',
-    database='exampledb'
-)
+def connect_db():
+    return pymysql.connect(
+        host='localhost',
+        user='your_username',  # 替換成你的 MySQL 使用者名稱
+        password='your_password',  # 替換成你的 MySQL 密碼
+        db='your_database',  # 替換成你的資料庫名稱
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor
+    )
 
-try:
+# 建立 users 表
+def create_table(connection):
     with connection.cursor() as cursor:
-        # 清理舊的 users 表
-        logging.info("Dropping old table if exists.")
         cursor.execute("DROP TABLE IF EXISTS users")
-        connection.commit()
-
-        # 建立新的 users 表
-        logging.info("Creating new table 'users'.")
         cursor.execute("""
             CREATE TABLE users (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(255),
-                email VARCHAR(255),
-                address VARCHAR(255),
-                gender ENUM('M', 'F')
+                email VARCHAR(255) NOT NULL,
+                name VARCHAR(255) NOT NULL,
+                address VARCHAR(255) NOT NULL,
+                gender ENUM('Male', 'Female') NOT NULL
             )
         """)
+    connection.commit()
+
+# 插入 30 萬筆測試資料
+def insert_data(connection, num_records=300000):
+    with connection.cursor() as cursor:
+        logging.info("開始插入資料...")
+        for _ in range(num_records):
+            email = faker.email()
+            name = faker.name()
+            address = faker.address()
+            gender = random.choice(['Male', 'Female'])
+            cursor.execute("""
+                INSERT INTO users (email, name, address, gender) 
+                VALUES (%s, %s, %s, %s)
+            """, (email, name, address, gender))
         connection.commit()
+        logging.info(f"{num_records} 筆資料插入完成")
 
-        # 固定的 20 個名字
-        names = ["Dean", "John", "Alice", "Bob", "Charlie", "Diana", "Edward", "Fiona", 
-                 "George", "Hannah", "Ivan", "Jane", "Kevin", "Laura", "Mike", "Nina", 
-                 "Oscar", "Paula", "Quincy", "Rachel"]
+# 隨機選取 10 個 email 作為搜尋條件
+def get_random_emails(connection, num_emails=10):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT email FROM users ORDER BY RAND() LIMIT %s", (num_emails,))
+        result = cursor.fetchall()
+        return [row['email'] for row in result]
 
-        # 插入 30 萬筆測試資料
-        logging.info("Inserting 300,000 records into 'users' table.")
-        insert_query = """
-            INSERT INTO users (name, email, address, gender)
-            VALUES (%s, %s, %s, %s)
-        """
-        for _ in range(300000):
-            name = random.choice(names)
-            email = fake.email()
-            address = fake.address()
-            gender = random.choice(['M', 'F'])
-            cursor.execute(insert_query, (name, email, address, gender))
-        connection.commit()
+# 根據 email 搜尋 name 和 gender
+def search_by_email(connection, emails):
+    with connection.cursor() as cursor:
+        total_time = 0
+        for email in emails:
+            start_time = time.time()
+            cursor.execute("SELECT name, gender FROM users WHERE email = %s", (email,))
+            cursor.fetchone()
+            total_time += (time.time() - start_time)
+        avg_time = total_time / len(emails)
+        return avg_time
 
-        # 無 Index 情況下的搜尋效能
-        logging.info("Running search query without index.")
-        start_time = time.time()
-        cursor.execute("EXPLAIN SELECT id, email, gender FROM users WHERE name = 'Dean'")
-        result_no_index = cursor.fetchall()
-        no_index_time = time.time() - start_time
-        logging.info(f"Search without index took {no_index_time:.4f} seconds.")
+# 執行主要邏輯
+def main():
+    connection = connect_db()
+    
+    try:
+        # 建立表格並插入資料
+        logging.info("建立資料表")
+        create_table(connection)
         
-        # 在 name 欄位上建立 Index
-        logging.info("Creating index on 'name' column.")
-        cursor.execute("CREATE INDEX idx_name ON users (name)")
+        logging.info("插入測試資料")
+        insert_data(connection)
+        
+        # 隨機選取 10 個 email
+        emails = get_random_emails(connection)
+        logging.info(f"隨機選取的 10 個 email: {emails}")
+        
+        # 不加索引的搜尋
+        logging.info("不加索引的搜尋")
+        avg_time_no_index = search_by_email(connection, emails)
+        logging.info(f"不加索引的平均搜尋時間: {avg_time_no_index:.6f} 秒")
+        
+        # 加上 email 索引
+        logging.info("建立索引")
+        with connection.cursor() as cursor:
+            cursor.execute("CREATE INDEX idx_email ON users(email)")
         connection.commit()
 
-        # 有 Index 情況下的搜尋效能
-        logging.info("Running search query with index.")
-        start_time = time.time()
-        cursor.execute("EXPLAIN SELECT id, email, gender FROM users WHERE name = 'Dean'")
-        result_with_index = cursor.fetchall()
-        with_index_time = time.time() - start_time
-        logging.info(f"Search with index took {with_index_time:.4f} seconds.")
+        # 加索引後的搜尋
+        logging.info("加上索引的搜尋")
+        avg_time_with_index = search_by_email(connection, emails)
+        logging.info(f"加上索引的平均搜尋時間: {avg_time_with_index:.6f} 秒")
+    
+    finally:
+        connection.close()
 
-        # 輸出 Explain 結果
-        logging.info("EXPLAIN output without index:")
-        for row in result_no_index:
-            logging.info(row)
+    # 結果輸出
+    logging.info(f"搜尋效能比較：無索引: {avg_time_no_index:.6f} 秒, 有索引: {avg_time_with_index:.6f} 秒")
 
-        logging.info("EXPLAIN output with index:")
-        for row in result_with_index:
-            logging.info(row)
-
-finally:
-    connection.close()
-    logging.info("Database connection closed.")
+if __name__ == "__main__":
+    main()

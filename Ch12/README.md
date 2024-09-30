@@ -138,15 +138,15 @@ echo processArray($inputArray); // 輸出：10, 20, 30, 40, 50
 
 ```
 請扮演擅長 [Python] 的後端工程師，你是 [MySQL] 資料庫的專家。
-請按照下面的需求寫一段比較 MySQL 有 index 與沒有 Index 對搜尋效能的影響的程式：
-1. 需要建立 [30] 萬筆的測試資料
+請按照下面的需求寫一段比較 MySQL 建立 index 對搜尋效能的影響的程式：
+1. 建立 [30] 萬筆的測試資料
 2. Table 為 users，Columns 有 id, email, name ,address, gender 等資訊
-3. 我們會以「name」作為搜尋條件，要回傳「id, email, geander」的資訊
-4. email, address, gender 請使用相關接近真實的虛擬資料
-5. name 用 20 個固定的名字儲存在陣列即可，要包含「Dean」，這是資料庫要搜尋的 Where 條件
-6. 最後使用 Explain 來輸出兩者的結果、執行所需時間
-7. 任務開始前會先 Drop 掉 Table 確保資料乾淨
+3. 我們會以「email」作為搜尋條件，要回傳「name, gender」等資訊
+4. name, email, address, gender 請使用套件生成接近真實的虛擬資料
+5. 完成資料初始化後，隨機抓出 10 筆 email，以此作為搜尋條件
+6. 最後輸出兩者執行所需的平均時間
+7. 任務開始前會先 Drop 掉 Table 確保資料乾淨，先搜尋無 index 後，再建立 index 搜尋
 8. 建議使用 pymysql 套件
-9. 搭配適當的註解讓我們了解執行過程
+9. 在程式加上適當的註解讓我們了解邏輯
 10. 在執行過程中加上 log 讓我們知道執行到哪個環節
 ```
